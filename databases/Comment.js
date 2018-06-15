@@ -7,8 +7,8 @@ exports.CommentFields = {
     content: 'content',
     createdByUserId: 'createdByUserId',
     createdByUser: 'createdByUser',
-    subjectId: 'subjectId',
-    subjectType: 'subjectType',
+    objectId: 'objectId',
+    objectType: 'objectType',
 };
 exports.CommentAssociations = {};
 exports.Comment = _Base_1.sequelize.define('comment', {
@@ -22,10 +22,10 @@ exports.Comment = _Base_1.sequelize.define('comment', {
     [exports.CommentFields.createdByUserId]: {
         type: sequelize_1.DataTypes.CHAR(50)
     },
-    [exports.CommentFields.subjectId]: {
+    [exports.CommentFields.objectId]: {
         type: sequelize_1.DataTypes.CHAR(50)
     },
-    [exports.CommentFields.subjectType]: {
+    [exports.CommentFields.objectType]: {
         type: sequelize_1.DataTypes.CHAR(50)
     },
 }, {
@@ -33,13 +33,13 @@ exports.Comment = _Base_1.sequelize.define('comment', {
         {
             unique: false,
             fields: [
-                exports.CommentFields.subjectType
+                exports.CommentFields.objectType
             ]
         },
         {
             unique: false,
             fields: [
-                exports.CommentFields.subjectId
+                exports.CommentFields.objectId
             ]
         },
         {

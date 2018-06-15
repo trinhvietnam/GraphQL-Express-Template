@@ -6,8 +6,8 @@ export const CommentFields = {
     content: 'content',
     createdByUserId: 'createdByUserId',
     createdByUser: 'createdByUser',
-    subjectId: 'subjectId',
-    subjectType: 'subjectType',
+    objectId: 'objectId',
+    objectType: 'objectType',
 };
 export const CommentAssociations = {};
 export const Comment = sequelize.define('comment',
@@ -23,10 +23,10 @@ export const Comment = sequelize.define('comment',
         [CommentFields.createdByUserId]: {
             type: DataTypes.CHAR(50)
         },
-        [CommentFields.subjectId]: {
+        [CommentFields.objectId]: {
             type: DataTypes.CHAR(50)
         },
-        [CommentFields.subjectType]: {
+        [CommentFields.objectType]: {
             type: DataTypes.CHAR(50)
         },
     },
@@ -35,13 +35,13 @@ export const Comment = sequelize.define('comment',
             {
                 unique: false,
                 fields: [
-                    CommentFields.subjectType
+                    CommentFields.objectType
                 ]
             },
             {
                 unique: false,
                 fields: [
-                    CommentFields.subjectId
+                    CommentFields.objectId
                 ]
 
             },
