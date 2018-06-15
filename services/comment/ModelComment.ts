@@ -4,7 +4,7 @@ export class ModelComment {
     static async list(subjectId) {
         var listComments = await Comment.findAll({
             where: {
-                [CommentFields.subjectId]: subjectId
+                [CommentFields.objectId]: subjectId
             }
         });
         //Need fill user info to comments in this code section

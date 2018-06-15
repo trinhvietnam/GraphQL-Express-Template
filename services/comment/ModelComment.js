@@ -5,7 +5,7 @@ class ModelComment {
     static async list(subjectId) {
         var listComments = await Comment_1.Comment.findAll({
             where: {
-                [Comment_1.CommentFields.subjectId]: subjectId
+                [Comment_1.CommentFields.objectId]: subjectId
             }
         });
         //Need fill user info to comments in this code section
