@@ -7,6 +7,7 @@ import {UserFields} from "../../databases/User";
 import {CommentDefsType} from "../comment/TypeDefsComment";
 import {ModelUser} from "./ModelUser";
 import {MathHelper} from "../../utities/MathHelper";
+import {VALIDATION_CREATE_USER, VALIDATION_UPDATE_USER} from "./ValidationUser";
 
 
 async function getUser(root, args, req, info) {
@@ -39,21 +40,10 @@ const UserQuery = `
   }
   type Mutation {
     createUser(
-       ${UserFields.name}: String!, 
-       ${UserFields.age}: Int!, 
-       ${UserFields.phone}: String!, 
-       ${UserFields.email}: String!, 
+       ${VALIDATION_CREATE_USER}
     ): User!,
     updateUser(
-       ${UserFields.id}: String!, 
-       ${UserFields.name}: String, 
-       ${UserFields.age}: Int, 
-       ${UserFields.phone}: String, 
-       ${UserFields.email}: String, 
-       ${UserFields.country}: String, 
-       ${UserFields.city}: String, 
-       ${UserFields.district}: String, 
-       ${UserFields.address}: String 
+       ${VALIDATION_UPDATE_USER} 
     ): User!
   }
 `;

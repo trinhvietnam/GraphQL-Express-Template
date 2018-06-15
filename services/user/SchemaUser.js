@@ -8,6 +8,7 @@ const User_1 = require("../../databases/User");
 const TypeDefsComment_1 = require("../comment/TypeDefsComment");
 const ModelUser_1 = require("./ModelUser");
 const MathHelper_1 = require("../../utities/MathHelper");
+const ValidationUser_1 = require("./ValidationUser");
 async function getUser(root, args, req, info) {
     return ModelUser_1.ModelUser.get(args[User_1.UserFields.id]);
 }
@@ -34,21 +35,10 @@ const UserQuery = `
   }
   type Mutation {
     createUser(
-       ${User_1.UserFields.name}: String!, 
-       ${User_1.UserFields.age}: Int!, 
-       ${User_1.UserFields.phone}: String!, 
-       ${User_1.UserFields.email}: String!, 
+       ${ValidationUser_1.VALIDATION_CREATE_USER}
     ): User!,
     updateUser(
-       ${User_1.UserFields.id}: String!, 
-       ${User_1.UserFields.name}: String, 
-       ${User_1.UserFields.age}: Int, 
-       ${User_1.UserFields.phone}: String, 
-       ${User_1.UserFields.email}: String, 
-       ${User_1.UserFields.country}: String, 
-       ${User_1.UserFields.city}: String, 
-       ${User_1.UserFields.district}: String, 
-       ${User_1.UserFields.address}: String 
+       ${ValidationUser_1.VALIDATION_UPDATE_USER} 
     ): User!
   }
 `;
