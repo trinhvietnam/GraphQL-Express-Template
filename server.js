@@ -4,12 +4,14 @@ const User_1 = require("./databases/User");
 const SchemaUser_1 = require("./services/user/SchemaUser");
 const SchemaProject_1 = require("./services/project/SchemaProject");
 const Project_1 = require("./databases/Project");
+const Comment_1 = require("./databases/Comment");
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 var app = express();
 User_1.User.sync({ force: false });
 Project_1.Project.sync({ force: false });
+Comment_1.Comment.sync({ force: false });
 app.use('/user', bodyParser.json(), graphqlExpress((req, res) => ({ schema: SchemaUser_1.default, context: req })));
 // GraphiQL, a visual editor for queries
 app.use('/graphiqlUser', graphiqlExpress({ endpointURL: '/user' }));

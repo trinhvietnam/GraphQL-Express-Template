@@ -9,23 +9,6 @@ const ModelProject_1 = require("./ModelProject");
 const ValidationProject_1 = require("./ValidationProject");
 const MathHelper_1 = require("../../utities/MathHelper");
 const Project_1 = require("../../databases/Project");
-const ProjectQuery = `
-  type Query {
-    getProject(id: String!): Project,
-    listProjects: [Project!],
-   
-  }
-  type Mutation {
-    
-    createProject(
-        ${ValidationProject_1.VALIDATION_CREATE_PROJECT}
-    ): Project!,
-    
-    updateProject(
-        ${ValidationProject_1.VALIDATION_UPDATE_PROJECT}
-    ): Project!,
-  }
-`;
 async function getProject(root, args, req, info) {
     var id = args.id;
     return await ModelProject_1.ModelProject.get(id);
@@ -57,6 +40,21 @@ exports.projectResolvers = {
         updateProject: updateProject,
     }
 };
+const ProjectQuery = `
+  type Query {
+    getProject(id: String!): Project,
+    listProjects: [Project!],
+  }
+  type Mutation {
+    createProject(
+        ${ValidationProject_1.VALIDATION_CREATE_PROJECT}
+    ): Project!,
+    
+    updateProject(
+        ${ValidationProject_1.VALIDATION_UPDATE_PROJECT}
+    ): Project!,
+  }
+`;
 exports.default = makeExecutableSchema({
     typeDefs: [ProjectQuery, TypeDefsProject_1.ProjectDefsType, TypeDefsUser_1.UserDefsType, TypeDefsComment_1.CommentDefsType],
     resolvers: lodash_1.merge(exports.projectResolvers, TypeDefsProject_1.innerProjectResolvers, TypeDefsUser_1.innerUserResolvers)

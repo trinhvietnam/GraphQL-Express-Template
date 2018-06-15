@@ -9,24 +9,6 @@ import {VALIDATION_CREATE_PROJECT, VALIDATION_UPDATE_PROJECT} from "./Validation
 import {MathHelper} from "../../utities/MathHelper";
 import {ProjectFields} from "../../databases/Project";
 
-const ProjectQuery = `
-  type Query {
-    getProject(id: String!): Project,
-    listProjects: [Project!],
-   
-  }
-  type Mutation {
-    
-    createProject(
-        ${VALIDATION_CREATE_PROJECT}
-    ): Project!,
-    
-    updateProject(
-        ${VALIDATION_UPDATE_PROJECT}
-    ): Project!,
-  }
-`;
-
 async function getProject(root, args, req, info) {
     var id = args.id;
     return await ModelProject.get(id);
@@ -62,6 +44,23 @@ export const projectResolvers = {
         updateProject: updateProject,
     }
 };
+
+const ProjectQuery = `
+  type Query {
+    getProject(id: String!): Project,
+    listProjects: [Project!],
+  }
+  type Mutation {
+    createProject(
+        ${VALIDATION_CREATE_PROJECT}
+    ): Project!,
+    
+    updateProject(
+        ${VALIDATION_UPDATE_PROJECT}
+    ): Project!,
+  }
+`;
+
 export default makeExecutableSchema({
     typeDefs: [ProjectQuery, ProjectDefsType, UserDefsType, CommentDefsType],
     resolvers: merge(projectResolvers, innerProjectResolvers, innerUserResolvers)
