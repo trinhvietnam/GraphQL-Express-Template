@@ -7,7 +7,7 @@ export const VALIDATION_CREATE_USER = `
        ${UserFields.email}: String!, 
 `;
 export const VALIDATION_UPDATE_USER = `
-        ${UserFields.id}: String!, 
+       ${UserFields.id}: String!, 
        ${UserFields.name}: String, 
        ${UserFields.age}: Int, 
        ${UserFields.phone}: String, 

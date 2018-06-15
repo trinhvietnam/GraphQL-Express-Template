@@ -8,7 +8,7 @@ exports.VALIDATION_CREATE_USER = `
        ${User_1.UserFields.email}: String!, 
 `;
 exports.VALIDATION_UPDATE_USER = `
-        ${User_1.UserFields.id}: String!, 
+       ${User_1.UserFields.id}: String!, 
        ${User_1.UserFields.name}: String, 
        ${User_1.UserFields.age}: Int, 
        ${User_1.UserFields.phone}: String, 
