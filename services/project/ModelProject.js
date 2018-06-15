@@ -22,6 +22,14 @@ class ModelProject {
                 return true;
         });
     }
+    static async update(json, id) {
+        await Project_1.Project.update(json, {
+            where: {
+                [Project_1.ProjectFields.id]: id
+            }
+        });
+        return await Project_1.Project.findById(id);
+    }
 }
 exports.ModelProject = ModelProject;
 //# sourceMappingURL=ModelProject.js.map

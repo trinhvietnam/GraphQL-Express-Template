@@ -1,5 +1,5 @@
 import {innerUserResolvers, UserDefsType} from "./TypeDefsUser";
-import {ProjectDefsType} from "../project/TypeDefsProject";
+import {innerProjectResolvers, ProjectDefsType} from "../project/TypeDefsProject";
 
 const {makeExecutableSchema} = require('graphql-tools');
 import {merge} from 'lodash';
@@ -15,7 +15,8 @@ async function getUser(root, args, req, info) {
 }
 
 async function listUsers(root, args, req, info) {
-    return await ModelUser.list();
+    var listUsers =  await ModelUser.list();
+    return listUsers;
 }
 
 async function createUser(root, args, req, info) {
@@ -47,6 +48,7 @@ const UserQuery = `
     ): User!
   }
 `;
+
 const userResolvers = {
     Query: {
         getUser: getUser,
@@ -59,5 +61,5 @@ const userResolvers = {
 };
 export default makeExecutableSchema({
     typeDefs: [UserQuery, UserDefsType, ProjectDefsType, CommentDefsType],
-    resolvers: merge(userResolvers, innerUserResolvers)
+    resolvers: merge(userResolvers, innerUserResolvers,innerProjectResolvers)
 });

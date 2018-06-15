@@ -13,7 +13,8 @@ async function getUser(root, args, req, info) {
     return ModelUser_1.ModelUser.get(args[User_1.UserFields.id]);
 }
 async function listUsers(root, args, req, info) {
-    return await ModelUser_1.ModelUser.list();
+    var listUsers = await ModelUser_1.ModelUser.list();
+    return listUsers;
 }
 async function createUser(root, args, req, info) {
     var id = MathHelper_1.MathHelper.genId();
@@ -54,6 +55,6 @@ const userResolvers = {
 };
 exports.default = makeExecutableSchema({
     typeDefs: [UserQuery, TypeDefsUser_1.UserDefsType, TypeDefsProject_1.ProjectDefsType, TypeDefsComment_1.CommentDefsType],
-    resolvers: lodash_1.merge(userResolvers, TypeDefsUser_1.innerUserResolvers)
+    resolvers: lodash_1.merge(userResolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsProject_1.innerProjectResolvers)
 });
 //# sourceMappingURL=SchemaUser.js.map

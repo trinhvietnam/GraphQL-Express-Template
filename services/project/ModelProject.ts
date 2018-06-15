@@ -22,4 +22,12 @@ export class ModelProject {
             if (p[ProjectFields.partnerIds] && p[ProjectFields.partnerIds].includes(userId)) return true;
         });
     }
+    static async update(json, id) {
+        await Project.update(json, {
+            where: {
+                [ProjectFields.id]: id
+            }
+        })
+        return await Project.findById(id);
+    }
 }

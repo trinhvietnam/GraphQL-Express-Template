@@ -15,13 +15,14 @@ export const ProjectDefsType = `
     }
 `;
 async function leader(root,args,context,info){
+    console.log('yyyyyyyyyyyyyyyyyyy');
     var leaderId = root[ProjectFields.leaderId];
     var leader = await ModelUser.get(leaderId);
-    root.dataValues[ProjectFields.leader] = leader;
     return leader;
 }
 async function partners(root,args,context,info){
     var partnerIds = root[ProjectFields.partnerIds];
+    if(!partnerIds) return [];
     var partners = await ModelUser.getSimples(partnerIds);
     root.dataValues[ProjectFields.partners] = partners;
     return partners;
