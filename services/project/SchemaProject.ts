@@ -5,7 +5,7 @@ import {merge} from 'lodash';
 import {innerUserResolvers, UserDefsType} from "../user/TypeDefsUser";
 import {CommentDefsType} from "../comment/TypeDefsComment";
 import {ModelProject} from "./ModelProject";
-import {VALIDATION_CREATE_PROJECT, VALIDATION_UPDATE_PROJECT} from "./ValidationProject";
+import {INPUT_CREATE_PROJECT, INPUT_UPDATE_PROJECT} from "./InputProject";
 import {MathHelper} from "../../utities/MathHelper";
 import {ProjectFields} from "../../databases/Project";
 import {GraphQLType} from "../../graphql/GraphQLType";
@@ -25,11 +25,11 @@ const ProjectQueryString = `
   }
   type Mutation {
     ${Mutation.createProject}(
-        ${VALIDATION_CREATE_PROJECT}
+        ${INPUT_CREATE_PROJECT}
     ): ${GraphQLType.Project}!,
     
     ${Mutation.updateProject}(
-        ${VALIDATION_UPDATE_PROJECT}
+        ${INPUT_UPDATE_PROJECT}
     ): ${GraphQLType.Project}!,
   }
 `;

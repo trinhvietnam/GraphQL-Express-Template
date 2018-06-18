@@ -6,7 +6,7 @@ const lodash_1 = require("lodash");
 const TypeDefsUser_1 = require("../user/TypeDefsUser");
 const TypeDefsComment_1 = require("../comment/TypeDefsComment");
 const ModelProject_1 = require("./ModelProject");
-const ValidationProject_1 = require("./ValidationProject");
+const InputProject_1 = require("./InputProject");
 const MathHelper_1 = require("../../utities/MathHelper");
 const Project_1 = require("../../databases/Project");
 const GraphQLType_1 = require("../../graphql/GraphQLType");
@@ -25,11 +25,11 @@ const ProjectQueryString = `
   }
   type Mutation {
     ${Mutation.createProject}(
-        ${ValidationProject_1.VALIDATION_CREATE_PROJECT}
+        ${InputProject_1.INPUT_CREATE_PROJECT}
     ): ${GraphQLType_1.GraphQLType.Project}!,
     
     ${Mutation.updateProject}(
-        ${ValidationProject_1.VALIDATION_UPDATE_PROJECT}
+        ${InputProject_1.INPUT_UPDATE_PROJECT}
     ): ${GraphQLType_1.GraphQLType.Project}!,
   }
 `;

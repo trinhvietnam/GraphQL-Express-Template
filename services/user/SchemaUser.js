@@ -8,7 +8,7 @@ const User_1 = require("../../databases/User");
 const TypeDefsComment_1 = require("../comment/TypeDefsComment");
 const ModelUser_1 = require("./ModelUser");
 const MathHelper_1 = require("../../utities/MathHelper");
-const ValidationUser_1 = require("./ValidationUser");
+const InputUser_1 = require("./InputUser");
 const ValidationComment_1 = require("../comment/ValidationComment");
 const Comment_1 = require("../../databases/Comment");
 const ModelProject_1 = require("../project/ModelProject");
@@ -30,13 +30,13 @@ const UserQueryString = `
   }
   type Mutation {
     createUser(
-       ${ValidationUser_1.VALIDATION_CREATE_USER}
+       ${InputUser_1.INPUT_CREATE_USER}
     ): ${GraphQLType_1.GraphQLType.User}!,
     updateUser(
-       ${ValidationUser_1.VALIDATION_UPDATE_USER} 
+       ${InputUser_1.INPUT_UPDATE_USER} 
     ): ${GraphQLType_1.GraphQLType.User}!
     comment(
-        ${ValidationComment_1.VALIDATION_COMMENT}
+        ${ValidationComment_1.INPUT_COMMENT}
     ): ${GraphQLType_1.GraphQLType.Comment}!
   }
 `;

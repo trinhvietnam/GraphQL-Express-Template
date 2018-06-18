@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../databases/User");
-exports.VALIDATION_CREATE_USER = `
+exports.INPUT_CREATE_USER = `
        ${User_1.UserFields.name}: String!, 
        ${User_1.UserFields.age}: Int!, 
        ${User_1.UserFields.phone}: String!, 
        ${User_1.UserFields.email}: String!, 
 `;
-exports.VALIDATION_UPDATE_USER = `
+exports.INPUT_UPDATE_USER = `
        ${User_1.UserFields.id}: String!, 
        ${User_1.UserFields.name}: String, 
        ${User_1.UserFields.age}: Int, 
@@ -18,4 +18,4 @@ exports.VALIDATION_UPDATE_USER = `
        ${User_1.UserFields.district}: String, 
        ${User_1.UserFields.address}: String 
 `;
-//# sourceMappingURL=ValidationUser.js.map
+//# sourceMappingURL=InputUser.js.map

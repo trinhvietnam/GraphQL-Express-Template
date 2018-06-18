@@ -7,8 +7,8 @@ import {UserFields} from "../../databases/User";
 import {CommentDefsType, innerCommentResolvers} from "../comment/TypeDefsComment";
 import {ModelUser} from "./ModelUser";
 import {MathHelper} from "../../utities/MathHelper";
-import {VALIDATION_CREATE_USER, VALIDATION_UPDATE_USER} from "./ValidationUser";
-import {VALIDATION_COMMENT} from "../comment/ValidationComment";
+import {INPUT_CREATE_USER, INPUT_UPDATE_USER} from "./InputUser";
+import {INPUT_COMMENT} from "../comment/ValidationComment";
 import {CommentFields} from "../../databases/Comment";
 import {ModelProject} from "../project/ModelProject";
 import {ModelComment} from "../comment/ModelComment";
@@ -30,13 +30,13 @@ const UserQueryString = `
   }
   type Mutation {
     createUser(
-       ${VALIDATION_CREATE_USER}
+       ${INPUT_CREATE_USER}
     ): ${GraphQLType.User}!,
     updateUser(
-       ${VALIDATION_UPDATE_USER} 
+       ${INPUT_UPDATE_USER} 
     ): ${GraphQLType.User}!
     comment(
-        ${VALIDATION_COMMENT}
+        ${INPUT_COMMENT}
     ): ${GraphQLType.Comment}!
   }
 `;
