@@ -8,23 +8,49 @@ import {ModelProject} from "./ModelProject";
 import {VALIDATION_CREATE_PROJECT, VALIDATION_UPDATE_PROJECT} from "./ValidationProject";
 import {MathHelper} from "../../utities/MathHelper";
 import {ProjectFields} from "../../databases/Project";
+import {GraphQLType} from "../../graphql/GraphQLType";
+const Query = {
+    getProject:'getProject',
+    listProjects:'listProjects',
+}
+const Mutation = {
+    createProject:'createProject',
+    updateProject:'updateProject'
+}
 
-async function getProject(root, args, req, info) {
+const ProjectQueryString = `
+  type Query {
+    ${Query.getProject}(id: String!): ${GraphQLType.Project},
+    listProjects: [${GraphQLType.Project}!],
+  }
+  type Mutation {
+    ${Mutation.createProject}(
+        ${VALIDATION_CREATE_PROJECT}
+    ): ${GraphQLType.Project}!,
+    
+    ${Mutation.updateProject}(
+        ${VALIDATION_UPDATE_PROJECT}
+    ): ${GraphQLType.Project}!,
+  }
+`;
+var rsQuery = {}
+var rsMutation = {}
+rsQuery[Query.getProject] = async function (root, args, req, info) {
     var id = args.id;
     return await ModelProject.get(id);
 }
 
-async function listProjects(root, args, req, info) {
+rsQuery[Query.listProjects] = async function (root, args, req, info) {
     return await ModelProject.getList();
 }
 
-async function createProject(root, args, req, info) {
+rsMutation[Mutation.createProject] = async function (root, args, req, info) {
     var id = MathHelper.genId();
     args[ProjectFields.leaderId] = '573412415182';
     return await ModelProject.create(args, id);
 }
 
-async function updateProject(root, args, req, info) {
+rsMutation[Mutation.updateProject] = async function (root, args, req, info) {
     var id = args[ProjectFields.id];
     var project = await ModelProject.get(id);
     if (!project) {
@@ -34,34 +60,13 @@ async function updateProject(root, args, req, info) {
     return ModelProject.update(args, id);
 }
 
-export const projectResolvers = {
-    Query: {
-        getProject: getProject,
-        listProjects: listProjects
-    },
-    Mutation: {
-        createProject: createProject,
-        updateProject: updateProject,
-    }
+export const resolvers = {
+    Query: rsQuery,
+    Mutation: rsMutation
 };
 
-const ProjectQuery = `
-  type Query {
-    getProject(id: String!): Project,
-    listProjects: [Project!],
-  }
-  type Mutation {
-    createProject(
-        ${VALIDATION_CREATE_PROJECT}
-    ): Project!,
-    
-    updateProject(
-        ${VALIDATION_UPDATE_PROJECT}
-    ): Project!,
-  }
-`;
 
 export default makeExecutableSchema({
-    typeDefs: [ProjectQuery, ProjectDefsType, UserDefsType, CommentDefsType],
-    resolvers: merge(projectResolvers, innerProjectResolvers, innerUserResolvers)
+    typeDefs: [ProjectQueryString, ProjectDefsType, UserDefsType, CommentDefsType],
+    resolvers: merge(resolvers, innerProjectResolvers, innerUserResolvers)
 });

@@ -20,6 +20,7 @@ export const UserFields = {
     isValidatedEmail: 'isValidatedEmail',
     language: 'language',
     type: 'type',
+    loginAt: 'loginAt',
     projects: 'projects',
 };
 export const UserAssociations = {};

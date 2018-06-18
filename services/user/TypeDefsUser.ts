@@ -1,7 +1,10 @@
 // The GraphQL schema in string form
 import {UserFields} from "../../databases/User";
 import {ModelProject} from "../project/ModelProject";
-export const UserDefsType = `type User { 
+import {GraphQLType} from "../../graphql/GraphQLType";
+export const UserDefsType = `
+    scalar Date
+    type ${GraphQLType.User} { 
         ${UserFields.id}: String,
         ${UserFields.name}: String, 
         ${UserFields.firstName}: String, 
@@ -19,18 +22,17 @@ export const UserDefsType = `type User {
         ${UserFields.isValidatedPhone}: Boolean, 
         ${UserFields.language}: Boolean, 
         ${UserFields.type}: [String!], 
-        ${UserFields.projects}: [Project!], 
+        ${UserFields.loginAt}: Date, 
+        ${UserFields.projects}: [${GraphQLType.Project}!], 
     }
 `;
-
-async function projects(root, args, req, info) {
+var rsUser = {};
+rsUser[UserFields.projects] = async function (root, args, req, info) {
     var userId = root[UserFields.id];
     var projects = await ModelProject.getProjectOfUser(userId);
     return projects;
 }
 
 export const innerUserResolvers = {
-    User: {
-        projects: projects,
-    }
+    User: rsUser
 };

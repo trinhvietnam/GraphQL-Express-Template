@@ -4,41 +4,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Project_1 = require("../../databases/Project");
 const ModelComment_1 = require("../comment/ModelComment");
 const ModelUser_1 = require("../user/ModelUser");
+const GraphQLType_1 = require("../../graphql/GraphQLType");
 exports.ProjectDefsType = `
-    type Project { 
+    type ${GraphQLType_1.GraphQLType.Project} { 
         ${Project_1.ProjectFields.id}: String,
         ${Project_1.ProjectFields.name}: String, 
         ${Project_1.ProjectFields.leaderId}: String!, 
-        ${Project_1.ProjectFields.leader}: User, 
+        ${Project_1.ProjectFields.leader}: ${GraphQLType_1.GraphQLType.User}, 
         ${Project_1.ProjectFields.partnerIds}: [String!], 
-        ${Project_1.ProjectFields.partners}: [User!],
-        ${Project_1.ProjectFields.comments}: [Comment!],
+        ${Project_1.ProjectFields.partners}: [${GraphQLType_1.GraphQLType.User}!],
+        ${Project_1.ProjectFields.comments}: [${GraphQLType_1.GraphQLType.Comment}!],
     }
 `;
-async function leader(root, args, context, info) {
-    console.log('yyyyyyyyyyyyyyyyyyy');
+var rsProject = {};
+rsProject[Project_1.ProjectFields.leader] = async function (root, args, context, info) {
     var leaderId = root[Project_1.ProjectFields.leaderId];
     var leader = await ModelUser_1.ModelUser.get(leaderId);
     return leader;
-}
-async function partners(root, args, context, info) {
+};
+rsProject[Project_1.ProjectFields.partners] = async function (root, args, context, info) {
     var partnerIds = root[Project_1.ProjectFields.partnerIds];
     if (!partnerIds)
         return [];
     var partners = await ModelUser_1.ModelUser.getSimples(partnerIds);
     root.dataValues[Project_1.ProjectFields.partners] = partners;
     return partners;
-}
-async function comments(root, args, context, info) {
+};
+rsProject[Project_1.ProjectFields.comments] = async function (root, args, context, info) {
     var projectId = root[Project_1.ProjectFields.id];
     var comments = await ModelComment_1.ModelComment.list(projectId);
     return comments;
-}
+};
 exports.innerProjectResolvers = {
-    Project: {
-        [Project_1.ProjectFields.partners]: partners,
-        [Project_1.ProjectFields.leader]: leader,
-        [Project_1.ProjectFields.comments]: partners
-    },
+    Project: rsProject
 };
 //# sourceMappingURL=TypeDefsProject.js.map

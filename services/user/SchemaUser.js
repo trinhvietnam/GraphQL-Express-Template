@@ -13,18 +13,47 @@ const ValidationComment_1 = require("../comment/ValidationComment");
 const Comment_1 = require("../../databases/Comment");
 const ModelProject_1 = require("../project/ModelProject");
 const ModelComment_1 = require("../comment/ModelComment");
-async function getUser(root, args, req, info) {
+const GraphQLType_1 = require("../../graphql/GraphQLType");
+const Query = {
+    getUser: 'getUser',
+    listUsers: 'listUsers'
+};
+const Mutation = {
+    createUser: 'createUser',
+    updateUser: 'updateUser',
+    comment: 'comment'
+};
+const UserQueryString = `
+  type Query {
+    ${Query.getUser}(id: String!): ${GraphQLType_1.GraphQLType.User},
+    ${Query.listUsers}: [${GraphQLType_1.GraphQLType.User}!]
+  }
+  type Mutation {
+    createUser(
+       ${ValidationUser_1.VALIDATION_CREATE_USER}
+    ): ${GraphQLType_1.GraphQLType.User}!,
+    updateUser(
+       ${ValidationUser_1.VALIDATION_UPDATE_USER} 
+    ): ${GraphQLType_1.GraphQLType.User}!
+    comment(
+        ${ValidationComment_1.VALIDATION_COMMENT}
+    ): ${GraphQLType_1.GraphQLType.Comment}!
+  }
+`;
+const resolveMutation = {};
+const resolveQuery = {};
+resolveQuery[Query.getUser] = async function (root, args, req, info) {
     return ModelUser_1.ModelUser.get(args[User_1.UserFields.id]);
-}
-async function listUsers(root, args, req, info) {
+};
+resolveQuery[Query.listUsers] = async function (root, args, req, info) {
     var listUsers = await ModelUser_1.ModelUser.list();
     return listUsers;
-}
-async function createUser(root, args, req, info) {
+};
+resolveMutation[Mutation.createUser] = async function (root, args, req, info) {
     var id = MathHelper_1.MathHelper.genId();
     return await ModelUser_1.ModelUser.create(args, id);
-}
-async function updateUser(root, args, req, info) {
+};
+resolveMutation[Mutation.updateUser] = async function (root, args, req, info) {
     var id = args[User_1.UserFields.id];
     delete args[User_1.UserFields.id];
     var user = await ModelUser_1.ModelUser.get(id);
@@ -32,8 +61,8 @@ async function updateUser(root, args, req, info) {
         throw new Error('NOT EXIST USER');
     }
     return await ModelUser_1.ModelUser.update(args, id);
-}
-async function comment(root, args, req, info) {
+};
+resolveMutation[Mutation.comment] = async function (root, args, req, info) {
     var id = MathHelper_1.MathHelper.genId();
     var objectId = args[Comment_1.CommentFields.objectId];
     var objectType = args[Comment_1.CommentFields.objectType];
@@ -47,37 +76,13 @@ async function comment(root, args, req, info) {
     }
     args[Comment_1.CommentFields.createdByUserId] = '573412415182';
     return await ModelComment_1.ModelComment.addComment(args, id);
-}
-const UserQuery = `
-  type Query {
-    getUser(id: String!): User,
-    listUsers: [User!]
-  }
-  type Mutation {
-    createUser(
-       ${ValidationUser_1.VALIDATION_CREATE_USER}
-    ): User!,
-    updateUser(
-       ${ValidationUser_1.VALIDATION_UPDATE_USER} 
-    ): User!
-    comment(
-        ${ValidationComment_1.VALIDATION_COMMENT}
-    ):Comment!
-  }
-`;
-const userResolvers = {
-    Query: {
-        getUser: getUser,
-        listUsers: listUsers
-    },
-    Mutation: {
-        createUser: createUser,
-        updateUser: updateUser,
-        comment: comment,
-    }
+};
+const resolvers = {
+    Query: resolveQuery,
+    Mutation: resolveMutation
 };
 exports.default = makeExecutableSchema({
-    typeDefs: [UserQuery, TypeDefsUser_1.UserDefsType, TypeDefsProject_1.ProjectDefsType, TypeDefsComment_1.CommentDefsType],
-    resolvers: lodash_1.merge(userResolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsProject_1.innerProjectResolvers, TypeDefsComment_1.innerCommentResolvers)
+    typeDefs: [UserQueryString, TypeDefsUser_1.UserDefsType, TypeDefsProject_1.ProjectDefsType, TypeDefsComment_1.CommentDefsType],
+    resolvers: lodash_1.merge(resolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsProject_1.innerProjectResolvers)
 });
 //# sourceMappingURL=SchemaUser.js.map

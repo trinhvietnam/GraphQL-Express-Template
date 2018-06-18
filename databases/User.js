@@ -21,6 +21,7 @@ exports.UserFields = {
     isValidatedEmail: 'isValidatedEmail',
     language: 'language',
     type: 'type',
+    loginAt: 'loginAt',
     projects: 'projects',
 };
 exports.UserAssociations = {};

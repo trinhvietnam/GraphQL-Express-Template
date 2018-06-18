@@ -12,76 +12,84 @@ import {VALIDATION_COMMENT} from "../comment/ValidationComment";
 import {CommentFields} from "../../databases/Comment";
 import {ModelProject} from "../project/ModelProject";
 import {ModelComment} from "../comment/ModelComment";
+import {GraphQLType} from "../../graphql/GraphQLType";
 
-
-async function getUser(root, args, req, info) {
-    return ModelUser.get(args[UserFields.id]);
+const Query = {
+    getUser: 'getUser',
+    listUsers: 'listUsers'
 }
-
-async function listUsers(root, args, req, info) {
-    var listUsers =  await ModelUser.list();
-    return listUsers;
+const Mutation = {
+    createUser: 'createUser',
+    updateUser: 'updateUser',
+    comment: 'comment'
 }
-
-async function createUser(root, args, req, info) {
-    var id = MathHelper.genId();
-    return await ModelUser.create(args, id);
-}
-
-async function updateUser(root, args, req, info) {
-    var id = args[UserFields.id];
-    delete args[UserFields.id];
-    var user = await ModelUser.get(id);
-    if(!user){
-        throw new Error('NOT EXIST USER');
-    }
-    return await ModelUser.update(args, id);
-}
-async function comment(root,args,req,info){
-    var id = MathHelper.genId();
-    var objectId = args[CommentFields.objectId];
-    var objectType =  args[CommentFields.objectType];
-    var validObjectTypes = ['project'];
-    if(!validObjectTypes.includes(objectType)){
-        throw new Error('INVALID objectType');
-    }
-    var project = await ModelProject.get(objectId);
-    if(!project){
-        throw new Error('NOT EXIST ENTITY');
-    }
-    args[CommentFields.createdByUserId] = '573412415182';
-    return await ModelComment.addComment(args,id);
-}
-const UserQuery = `
+const UserQueryString = `
   type Query {
-    getUser(id: String!): User,
-    listUsers: [User!]
+    ${Query.getUser}(id: String!): ${GraphQLType.User},
+    ${Query.listUsers}: [${GraphQLType.User}!]
   }
   type Mutation {
     createUser(
        ${VALIDATION_CREATE_USER}
-    ): User!,
+    ): ${GraphQLType.User}!,
     updateUser(
        ${VALIDATION_UPDATE_USER} 
-    ): User!
+    ): ${GraphQLType.User}!
     comment(
         ${VALIDATION_COMMENT}
-    ):Comment!
+    ): ${GraphQLType.Comment}!
   }
 `;
 
-const userResolvers = {
-    Query: {
-        getUser: getUser,
-        listUsers: listUsers
-    },
-    Mutation: {
-        createUser: createUser,
-        updateUser: updateUser,
-        comment: comment,
+const resolveMutation = {}
+const resolveQuery = {}
+
+
+resolveQuery[Query.getUser] = async function(root, args, req, info) {
+    return ModelUser.get(args[UserFields.id]);
+}
+
+resolveQuery[Query.listUsers] = async function (root, args, req, info) {
+    var listUsers = await ModelUser.list();
+    return listUsers;
+}
+
+resolveMutation[Mutation.createUser] = async function(root, args, req, info) {
+    var id = MathHelper.genId();
+    return await ModelUser.create(args, id);
+}
+
+resolveMutation[Mutation.updateUser] = async function (root, args, req, info) {
+    var id = args[UserFields.id];
+    delete args[UserFields.id];
+    var user = await ModelUser.get(id);
+    if (!user) {
+        throw new Error('NOT EXIST USER');
     }
+    return await ModelUser.update(args, id);
+}
+
+resolveMutation[Mutation.comment] = async function (root, args, req, info) {
+    var id = MathHelper.genId();
+    var objectId = args[CommentFields.objectId];
+    var objectType = args[CommentFields.objectType];
+    var validObjectTypes = ['project'];
+    if (!validObjectTypes.includes(objectType)) {
+        throw new Error('INVALID objectType');
+    }
+    var project = await ModelProject.get(objectId);
+    if (!project) {
+        throw new Error('NOT EXIST ENTITY');
+    }
+    args[CommentFields.createdByUserId] = '573412415182';
+    return await ModelComment.addComment(args, id);
+}
+
+const resolvers = {
+    Query: resolveQuery,
+    Mutation: resolveMutation
 };
 export default makeExecutableSchema({
-    typeDefs: [UserQuery, UserDefsType, ProjectDefsType, CommentDefsType],
-    resolvers: merge(userResolvers, innerUserResolvers,innerProjectResolvers, innerCommentResolvers)
+    typeDefs: [UserQueryString, UserDefsType, ProjectDefsType, CommentDefsType],
+    resolvers: merge(resolvers, innerUserResolvers, innerProjectResolvers)
 });

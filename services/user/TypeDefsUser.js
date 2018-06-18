@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // The GraphQL schema in string form
 const User_1 = require("../../databases/User");
 const ModelProject_1 = require("../project/ModelProject");
-exports.UserDefsType = `type User { 
+const GraphQLType_1 = require("../../graphql/GraphQLType");
+exports.UserDefsType = `
+    scalar Date
+    type ${GraphQLType_1.GraphQLType.User} { 
         ${User_1.UserFields.id}: String,
         ${User_1.UserFields.name}: String, 
         ${User_1.UserFields.firstName}: String, 
@@ -21,17 +24,17 @@ exports.UserDefsType = `type User {
         ${User_1.UserFields.isValidatedPhone}: Boolean, 
         ${User_1.UserFields.language}: Boolean, 
         ${User_1.UserFields.type}: [String!], 
-        ${User_1.UserFields.projects}: [Project!], 
+        ${User_1.UserFields.loginAt}: Date, 
+        ${User_1.UserFields.projects}: [${GraphQLType_1.GraphQLType.Project}!], 
     }
 `;
-async function projects(root, args, req, info) {
+var rsUser = {};
+rsUser[User_1.UserFields.projects] = async function (root, args, req, info) {
     var userId = root[User_1.UserFields.id];
     var projects = await ModelProject_1.ModelProject.getProjectOfUser(userId);
     return projects;
-}
+};
 exports.innerUserResolvers = {
-    User: {
-        projects: projects,
-    }
+    User: rsUser
 };
 //# sourceMappingURL=TypeDefsUser.js.map

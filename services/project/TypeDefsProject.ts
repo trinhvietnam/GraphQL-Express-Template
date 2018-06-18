@@ -2,40 +2,37 @@
 import {ProjectFields} from "../../databases/Project";
 import {ModelComment} from "../comment/ModelComment";
 import {ModelUser} from "../user/ModelUser";
+import {GraphQLType} from "../../graphql/GraphQLType";
 
 export const ProjectDefsType = `
-    type Project { 
+    type ${GraphQLType.Project} { 
         ${ProjectFields.id}: String,
         ${ProjectFields.name}: String, 
         ${ProjectFields.leaderId}: String!, 
-        ${ProjectFields.leader}: User, 
+        ${ProjectFields.leader}: ${GraphQLType.User}, 
         ${ProjectFields.partnerIds}: [String!], 
-        ${ProjectFields.partners}: [User!],
-        ${ProjectFields.comments}: [Comment!],
+        ${ProjectFields.partners}: [${GraphQLType.User}!],
+        ${ProjectFields.comments}: [${GraphQLType.Comment}!],
     }
 `;
-async function leader(root,args,context,info){
-    console.log('yyyyyyyyyyyyyyyyyyy');
+var rsProject = {};
+rsProject[ProjectFields.leader] = async function (root, args, context, info) {
     var leaderId = root[ProjectFields.leaderId];
     var leader = await ModelUser.get(leaderId);
     return leader;
 }
-async function partners(root,args,context,info){
+rsProject[ProjectFields.partners] = async function (root, args, context, info) {
     var partnerIds = root[ProjectFields.partnerIds];
-    if(!partnerIds) return [];
+    if (!partnerIds) return [];
     var partners = await ModelUser.getSimples(partnerIds);
     root.dataValues[ProjectFields.partners] = partners;
     return partners;
 }
-async function comments(root,args,context,info){
+rsProject[ProjectFields.comments] = async function (root, args, context, info) {
     var projectId = root[ProjectFields.id];
     var comments = await ModelComment.list(projectId);
     return comments;
 }
 export const innerProjectResolvers = {
-    Project: {
-        [ProjectFields.partners]: partners,
-        [ProjectFields.leader]: leader,
-        [ProjectFields.comments]: partners
-    },
+    Project: rsProject
 };
