@@ -1,10 +1,8 @@
-import {innerUserResolvers, UserDefsType} from "./TypeDefsUser";
-import {innerProjectResolvers, ProjectDefsType} from "../project/TypeDefsProject";
+import {innerUserResolvers, UserType} from "./TypeDefsUser";
 
 const {makeExecutableSchema} = require('graphql-tools');
 import {merge} from 'lodash';
 import {UserFields} from "../../databases/User";
-import {CommentDefsType, innerCommentResolvers} from "../comment/TypeDefsComment";
 import {ModelUser} from "./ModelUser";
 import {MathHelper} from "../../utities/MathHelper";
 import {INPUT_CREATE_USER, INPUT_UPDATE_USER} from "./InputUser";
@@ -13,6 +11,9 @@ import {CommentFields} from "../../databases/Comment";
 import {ModelProject} from "../project/ModelProject";
 import {ModelComment} from "../comment/ModelComment";
 import {GraphQLType} from "../../graphql/GraphQLType";
+import {ScalarJSON} from "../../graphql/ScalarTypes";
+import {innerProjectResolvers, ProjectType} from "../project/TypeDefsProject";
+import {CommentType} from "../comment/TypeDefsComment";
 
 const Query = {
     getUser: 'getUser',
@@ -45,7 +46,7 @@ const resolveMutation = {}
 const resolveQuery = {}
 
 
-resolveQuery[Query.getUser] = async function(root, args, req, info) {
+resolveQuery[Query.getUser] = async function (root, args, req, info) {
     return ModelUser.get(args[UserFields.id]);
 }
 
@@ -54,7 +55,7 @@ resolveQuery[Query.listUsers] = async function (root, args, req, info) {
     return listUsers;
 }
 
-resolveMutation[Mutation.createUser] = async function(root, args, req, info) {
+resolveMutation[Mutation.createUser] = async function (root, args, req, info) {
     var id = MathHelper.genId();
     return await ModelUser.create(args, id);
 }
@@ -84,12 +85,17 @@ resolveMutation[Mutation.comment] = async function (root, args, req, info) {
     args[CommentFields.createdByUserId] = '573412415182';
     return await ModelComment.addComment(args, id);
 }
-
+const UserDefsType = `
+    ${ProjectType}
+    ${UserType}
+    ${CommentType}
+`;
 const resolvers = {
     Query: resolveQuery,
     Mutation: resolveMutation
 };
+console.log([UserQueryString, UserDefsType, 'scalar JSON', 'scalar Date'].join('\n'))
 export default makeExecutableSchema({
-    typeDefs: [UserQueryString, UserDefsType, ProjectDefsType, CommentDefsType],
-    resolvers: merge(resolvers, innerUserResolvers, innerProjectResolvers)
+    typeDefs: [UserQueryString, UserDefsType, 'scalar JSON', 'scalar Date'],
+    resolvers: merge(resolvers, innerUserResolvers, innerProjectResolvers, {JSON: ScalarJSON})
 });

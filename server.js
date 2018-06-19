@@ -19,8 +19,8 @@ app.use('/project', bodyParser.json(), graphqlExpress((req, res) => ({ schema: S
 // GraphiQL, a visual editor for queries
 app.use('/graphiqlProject', graphiqlExpress({ endpointURL: '/project' }));
 // Start the server
-app.listen(3000, () => {
-    console.log('Go to http://localhost:3000/graphiqlUser to run queries!');
-    console.log('Go to http://localhost:3000/graphiqlProject to run queries!');
+app.listen(8000, () => {
+    console.log('Go to http://localhost:8000/graphiqlUser to run queries!');
+    console.log('Go to http://localhost:8000/graphiqlProject to run queries!');
 });
 //# sourceMappingURL=server.js.map

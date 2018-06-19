@@ -3,19 +3,21 @@ import {ProjectFields} from "../../databases/Project";
 import {ModelComment} from "../comment/ModelComment";
 import {ModelUser} from "../user/ModelUser";
 import {GraphQLType} from "../../graphql/GraphQLType";
-
-export const ProjectDefsType = `
+import {rsComment} from "../comment/TypeDefsComment";
+import {rsUser} from "../user/TypeDefsUser";
+export const ProjectType = `
     type ${GraphQLType.Project} { 
         ${ProjectFields.id}: String,
         ${ProjectFields.name}: String, 
+        ${ProjectFields.info}: JSON, 
         ${ProjectFields.leaderId}: String!, 
         ${ProjectFields.leader}: ${GraphQLType.User}, 
         ${ProjectFields.partnerIds}: [String!], 
         ${ProjectFields.partners}: [${GraphQLType.User}!],
         ${ProjectFields.comments}: [${GraphQLType.Comment}!],
-    }
-`;
-var rsProject = {};
+    }`;
+
+export const rsProject = {};
 rsProject[ProjectFields.leader] = async function (root, args, context, info) {
     var leaderId = root[ProjectFields.leaderId];
     var leader = await ModelUser.get(leaderId);

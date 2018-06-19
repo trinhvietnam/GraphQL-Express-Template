@@ -5,6 +5,7 @@ const sequelize_1 = require("sequelize");
 exports.ProjectFields = {
     id: 'id',
     name: 'name',
+    info: 'info',
     leaderId: 'leaderId',
     leader: 'leader',
     partnerIds: 'partnerIds',

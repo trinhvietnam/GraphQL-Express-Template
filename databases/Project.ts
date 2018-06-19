@@ -1,9 +1,11 @@
 import {sequelize} from "./_Base";
 import {DataTypes} from 'sequelize';
+import {GraphQLType} from "../graphql/GraphQLType";
 
 export const ProjectFields = {
     id: 'id',
     name: 'name',
+    info: 'info',
     leaderId: 'leaderId',
     leader: 'leader',
     partnerIds: 'partnerIds',

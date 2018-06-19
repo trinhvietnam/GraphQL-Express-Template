@@ -1,14 +1,14 @@
-import {innerProjectResolvers, ProjectDefsType} from "../project/TypeDefsProject";
-
+import {innerProjectResolvers, ProjectType} from "../project/TypeDefsProject";
 const {makeExecutableSchema} = require('graphql-tools');
 import {merge} from 'lodash';
-import {innerUserResolvers, UserDefsType} from "../user/TypeDefsUser";
-import {CommentDefsType} from "../comment/TypeDefsComment";
+import {innerUserResolvers, UserType} from "../user/TypeDefsUser";
+import {CommentType, innerCommentResolvers} from "../comment/TypeDefsComment";
 import {ModelProject} from "./ModelProject";
 import {INPUT_CREATE_PROJECT, INPUT_UPDATE_PROJECT} from "./InputProject";
 import {MathHelper} from "../../utities/MathHelper";
 import {ProjectFields} from "../../databases/Project";
 import {GraphQLType} from "../../graphql/GraphQLType";
+import {ScalarDate, ScalarJSON} from "../../graphql/ScalarTypes";
 const Query = {
     getProject:'getProject',
     listProjects:'listProjects',
@@ -59,14 +59,17 @@ rsMutation[Mutation.updateProject] = async function (root, args, req, info) {
     delete args[ProjectFields.id];
     return ModelProject.update(args, id);
 }
-
+export const ProjectDefsType = `
+    ${CommentType}
+    ${UserType}
+    ${ProjectType}
+`;
 export const resolvers = {
     Query: rsQuery,
     Mutation: rsMutation
 };
-
-
+console.log( [ProjectQueryString, ProjectDefsType,'scalar JSON','scalar Date'].join('\n'));
 export default makeExecutableSchema({
-    typeDefs: [ProjectQueryString, ProjectDefsType, UserDefsType, CommentDefsType],
-    resolvers: merge(resolvers, innerProjectResolvers, innerUserResolvers)
+    typeDefs: [ProjectQueryString, ProjectDefsType,'scalar JSON','scalar Date'],
+    resolvers: merge(resolvers, innerProjectResolvers,innerUserResolvers,innerCommentResolvers,{JSON:ScalarJSON},{Date:ScalarDate})
 });

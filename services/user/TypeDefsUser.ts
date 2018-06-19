@@ -2,8 +2,7 @@
 import {UserFields} from "../../databases/User";
 import {ModelProject} from "../project/ModelProject";
 import {GraphQLType} from "../../graphql/GraphQLType";
-export const UserDefsType = `
-    scalar Date
+export const UserType = `
     type ${GraphQLType.User} { 
         ${UserFields.id}: String,
         ${UserFields.name}: String, 
@@ -24,15 +23,13 @@ export const UserDefsType = `
         ${UserFields.type}: [String!], 
         ${UserFields.loginAt}: Date, 
         ${UserFields.projects}: [${GraphQLType.Project}!], 
-    }
-`;
-var rsUser = {};
+    }`;
+export const rsUser = {};
 rsUser[UserFields.projects] = async function (root, args, req, info) {
     var userId = root[UserFields.id];
     var projects = await ModelProject.getProjectOfUser(userId);
     return projects;
 }
-
 export const innerUserResolvers = {
     User: rsUser
 };

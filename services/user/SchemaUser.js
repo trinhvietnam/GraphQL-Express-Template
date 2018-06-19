@@ -1,11 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const TypeDefsUser_1 = require("./TypeDefsUser");
-const TypeDefsProject_1 = require("../project/TypeDefsProject");
 const { makeExecutableSchema } = require('graphql-tools');
 const lodash_1 = require("lodash");
 const User_1 = require("../../databases/User");
-const TypeDefsComment_1 = require("../comment/TypeDefsComment");
 const ModelUser_1 = require("./ModelUser");
 const MathHelper_1 = require("../../utities/MathHelper");
 const InputUser_1 = require("./InputUser");
@@ -14,6 +12,9 @@ const Comment_1 = require("../../databases/Comment");
 const ModelProject_1 = require("../project/ModelProject");
 const ModelComment_1 = require("../comment/ModelComment");
 const GraphQLType_1 = require("../../graphql/GraphQLType");
+const ScalarTypes_1 = require("../../graphql/ScalarTypes");
+const TypeDefsProject_1 = require("../project/TypeDefsProject");
+const TypeDefsComment_1 = require("../comment/TypeDefsComment");
 const Query = {
     getUser: 'getUser',
     listUsers: 'listUsers'
@@ -77,12 +78,18 @@ resolveMutation[Mutation.comment] = async function (root, args, req, info) {
     args[Comment_1.CommentFields.createdByUserId] = '573412415182';
     return await ModelComment_1.ModelComment.addComment(args, id);
 };
+const UserDefsType = `
+    ${TypeDefsProject_1.ProjectType}
+    ${TypeDefsUser_1.UserType}
+    ${TypeDefsComment_1.CommentType}
+`;
 const resolvers = {
     Query: resolveQuery,
     Mutation: resolveMutation
 };
+console.log([UserQueryString, UserDefsType, 'scalar JSON', 'scalar Date'].join('\n'));
 exports.default = makeExecutableSchema({
-    typeDefs: [UserQueryString, TypeDefsUser_1.UserDefsType, TypeDefsProject_1.ProjectDefsType, TypeDefsComment_1.CommentDefsType],
-    resolvers: lodash_1.merge(resolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsProject_1.innerProjectResolvers)
+    typeDefs: [UserQueryString, UserDefsType, 'scalar JSON', 'scalar Date'],
+    resolvers: lodash_1.merge(resolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsProject_1.innerProjectResolvers, { JSON: ScalarTypes_1.ScalarJSON })
 });
 //# sourceMappingURL=SchemaUser.js.map

@@ -1,5 +1,6 @@
 import {sequelize} from "./_Base";
 import {DataTypes} from 'sequelize';
+import {GraphQLType} from "../graphql/GraphQLType";
 
 export const UserFields = {
     id: 'id',
@@ -23,6 +24,7 @@ export const UserFields = {
     loginAt: 'loginAt',
     projects: 'projects',
 };
+
 export const UserAssociations = {};
 export const User = sequelize.define('user',
     {

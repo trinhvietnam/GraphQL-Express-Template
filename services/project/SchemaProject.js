@@ -10,6 +10,7 @@ const InputProject_1 = require("./InputProject");
 const MathHelper_1 = require("../../utities/MathHelper");
 const Project_1 = require("../../databases/Project");
 const GraphQLType_1 = require("../../graphql/GraphQLType");
+const ScalarTypes_1 = require("../../graphql/ScalarTypes");
 const Query = {
     getProject: 'getProject',
     listProjects: 'listProjects',
@@ -56,12 +57,18 @@ rsMutation[Mutation.updateProject] = async function (root, args, req, info) {
     delete args[Project_1.ProjectFields.id];
     return ModelProject_1.ModelProject.update(args, id);
 };
+exports.ProjectDefsType = `
+    ${TypeDefsComment_1.CommentType}
+    ${TypeDefsUser_1.UserType}
+    ${TypeDefsProject_1.ProjectType}
+`;
 exports.resolvers = {
     Query: rsQuery,
     Mutation: rsMutation
 };
+console.log([ProjectQueryString, exports.ProjectDefsType, 'scalar JSON', 'scalar Date'].join('\n'));
 exports.default = makeExecutableSchema({
-    typeDefs: [ProjectQueryString, TypeDefsProject_1.ProjectDefsType, TypeDefsUser_1.UserDefsType, TypeDefsComment_1.CommentDefsType],
-    resolvers: lodash_1.merge(exports.resolvers, TypeDefsProject_1.innerProjectResolvers, TypeDefsUser_1.innerUserResolvers)
+    typeDefs: [ProjectQueryString, exports.ProjectDefsType, 'scalar JSON', 'scalar Date'],
+    resolvers: lodash_1.merge(exports.resolvers, TypeDefsProject_1.innerProjectResolvers, TypeDefsUser_1.innerUserResolvers, TypeDefsComment_1.innerCommentResolvers, { JSON: ScalarTypes_1.ScalarJSON }, { Date: ScalarTypes_1.ScalarDate })
 });
 //# sourceMappingURL=SchemaProject.js.map

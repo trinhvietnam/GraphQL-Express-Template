@@ -9,6 +9,7 @@ export const CommentFields = {
     objectId: 'objectId',
     objectType: 'objectType',
 };
+
 export const CommentAssociations = {};
 export const Comment = sequelize.define('comment',
     {
